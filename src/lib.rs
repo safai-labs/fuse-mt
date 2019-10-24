@@ -14,10 +14,9 @@
 // Copyright (c) 2016-2020 by William R. Fraser
 //
 
-#![deny(rust_2018_idioms)]
+extern crate libc;
+extern crate threadpool;
 
-#[macro_use]
-extern crate log;
 
 mod directory_cache;
 mod fusemt;
@@ -26,7 +25,22 @@ mod types;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-pub use fuser::{FileType, mount, spawn_mount};
+use std::ffi::OsStr;
+use std::io;
 
+pub use fuser::{FileType, mount2, spawn_mount, MountOption};
 pub use crate::fusemt::*;
 pub use crate::types::*;
+
+
+/// Mounts a filesystem
+// A wrapper around fuser::mount, since fuser::mount is deprecated
+// and we will wrap it ourselves later, we don't want it bleeding out.
+#[inline]
+pub fn mount<FS, P>(filesystem: FS, mount_point: P, options: &[&OsStr]) -> io::Result<()>
+where
+    FS: fuser::Filesystem,
+    P: AsRef<std::path::Path> {
+		#[allow(deprecated)]
+		fuser::mount(filesystem, mount_point, options)
+}
