@@ -19,7 +19,7 @@ threadpool = "1.8.1"
 
 [dependencies.fuser]
 path="../fuser"
-version="0.8.0"
+version="0.9.0"
 features=[ "abi-7-31", "libfuse" ]
 
 
