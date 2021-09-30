@@ -480,6 +480,7 @@ pub trait FilesystemMT {
     // bmap
 
     /// Test for a POSIX file lock.
+    #[allow(clippy::too_many_arguments)]
     fn getlk(&self, _req: &RequestInfo, _path: &Path, _fh: u64,
         _lock_owner: u64, _start: u64, _end: u64, _typ: i32, _pid: u32) -> ResultEmpty {
         Err(libc::ENOSYS)
@@ -492,6 +493,7 @@ pub trait FilesystemMT {
     /// used to fill in this field in getlk(). Note: if the locking methods are not
     /// implemented, the kernel will still allow file locking to work locally.
     /// Hence these are only interesting for network filesystems and similar.
+    #[allow(clippy::too_many_arguments)]
     fn setlk(&self,
         _req: RequestInfo,
         _path: &Path,
@@ -514,6 +516,7 @@ pub trait FilesystemMT {
         }
 
     /// control device
+    #[allow(clippy::too_many_arguments)]
     fn ioctl(
         &self,
         _req: RequestInfo,
@@ -548,6 +551,7 @@ pub trait FilesystemMT {
     }
 
     /// Copy the specified range from the source inode to the destination inode
+    #[allow(clippy::too_many_arguments)]
     fn copy_file_range(
         &self,
         _req: RequestInfo,
