@@ -96,7 +96,8 @@ impl<T: FilesystemMT + Sync + Send + 'static> FuseMT<T> {
             f()
         } else {
             if self.threads.is_none() {
-                debug!("initializing threadpool with {} threads", self.num_threads);
+                debug!("initializing threadpool with {} threads", 
+                    self.num_threads);
                 self.threads = Some(ThreadPool::new(self.num_threads));
             }
             self.threads.as_ref().unwrap().execute(f);
