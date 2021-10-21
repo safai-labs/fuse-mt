@@ -17,6 +17,8 @@
 extern crate libc;
 extern crate threadpool;
 
+// #[macro_use]
+// extern crate log;
 
 mod directory_cache;
 mod fusemt;

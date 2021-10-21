@@ -10,8 +10,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::SystemTime;
 
-// use fuse;
-// use libc;
+
 use threadpool::ThreadPool;
 use tracing::{debug, error};
 
@@ -20,6 +19,8 @@ use crate:: {
     inode_table::*,
     types::*
 };
+use fuser::TimeOrNow;
+
 
 trait IntoRequestInfo {
     fn info(&self) -> RequestInfo;
@@ -31,7 +32,7 @@ impl<'a> IntoRequestInfo for fuser::Request<'a> {
             unique: self.unique(),
             uid: self.uid(),
             gid: self.gid(),
-            pid: self.pid(),
+            pid: self.pid() as i32,
         }
     }
 }
@@ -124,7 +125,7 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
         debug!("init");
         self.target.init(req.info())
     }
-    
+
     fn destroy(&mut self) {
         debug!("destroy");
         self.target.destroy();
