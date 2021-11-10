@@ -134,11 +134,7 @@ pub type ResultCreate = Result<CreatedEntry, libc::c_int>;
 pub type ResultXattr = Result<Xattr, libc::c_int>;
 pub type ResultBmap = Result<u64, libc::c_int>;
 pub type ResultLseek = Result<u64, libc::c_int>;
-<<<<<<< HEAD
-// pub type ResultIOCTL<'a> = Result<&'a [u8]>
-=======
 pub type ResultIOCTL<'a> = Result<(i32, &'a [u8]), libc::c_int>;
->>>>>>> ioctl_support
 
 #[cfg(target_os = "macos")]
 pub type ResultXTimes = Result<XTimes, libc::c_int>;
@@ -495,10 +491,7 @@ pub trait FilesystemMT {
     // bmap
 
     /// Test for a POSIX file lock.
-<<<<<<< HEAD
-=======
     #[allow(clippy::too_many_arguments)]
->>>>>>> ioctl_support
     fn getlk(&self, _req: &RequestInfo, _path: &Path, _fh: u64,
         _lock_owner: u64, _start: u64, _end: u64, _typ: i32, _pid: u32) -> ResultEmpty {
         Err(libc::ENOSYS)
@@ -511,10 +504,7 @@ pub trait FilesystemMT {
     /// used to fill in this field in getlk(). Note: if the locking methods are not
     /// implemented, the kernel will still allow file locking to work locally.
     /// Hence these are only interesting for network filesystems and similar.
-<<<<<<< HEAD
-=======
     #[allow(clippy::too_many_arguments)]
->>>>>>> ioctl_support
     fn setlk(&self,
         _req: RequestInfo,
         _path: &Path,
@@ -537,26 +527,16 @@ pub trait FilesystemMT {
         }
 
     /// control device
-<<<<<<< HEAD
-=======
     #[allow(clippy::too_many_arguments)]
->>>>>>> ioctl_support
     fn ioctl(
         &self,
         _req: RequestInfo,
         _path: &Path,
         _fh: u64, _flags: u32,
-<<<<<<< HEAD
-        _cmd: u32, 
-        _in_data: &[u8],
-        callback: impl FnOnce(ResultSlice<'_>) -> CallbackResult
-    ) -> CallbackResult {
-=======
         _cmd: u32,
         _in_data: &[u8],
         callback: impl FnOnce(ResultIOCTL<'_>) -> 
             CallbackResult) -> CallbackResult {
->>>>>>> ioctl_support
         callback(Err(libc::ENOSYS))
     }
 
@@ -582,10 +562,7 @@ pub trait FilesystemMT {
     }
 
     /// Copy the specified range from the source inode to the destination inode
-<<<<<<< HEAD
-=======
     #[allow(clippy::too_many_arguments)]
->>>>>>> ioctl_support
     fn copy_file_range(
         &self,
         _req: RequestInfo,
