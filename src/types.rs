@@ -7,8 +7,10 @@ use std::ffi::{OsStr, OsString};
 use std::path::Path;
 use std::time::{Duration, SystemTime};
 
+
 /// Info about a request.
 #[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature="serde", derive(Serialize, Deserialize))]
 pub struct RequestInfo {
     /// The unique ID assigned to this request by FUSE.
     pub unique: u64,
@@ -18,6 +20,15 @@ pub struct RequestInfo {
     pub gid: u32,
     /// The process ID of the process making the request.
     pub pid: i32,
+}
+
+impl std::fmt::Display for RequestInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) 
+        -> Result<(), std::fmt::Error> 
+    {
+        write!(f, "{{ unique: {}, uid: {}, gid: {}, pid: {} }}",
+            self.unique, self.uid, self.gid, self.pid)
+    }
 }
 
 /// A directory entry.
