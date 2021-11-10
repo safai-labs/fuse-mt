@@ -96,7 +96,8 @@ impl<T: FilesystemMT + Sync + Send + 'static> FuseMT<T> {
             f()
         } else {
             if self.threads.is_none() {
-                debug!("initializing threadpool with {} threads", self.num_threads);
+                debug!("initializing threadpool with {} threads", 
+                    self.num_threads);
                 self.threads = Some(ThreadPool::new(self.num_threads));
             }
             self.threads.as_ref().unwrap().execute(f);
@@ -124,7 +125,6 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
         debug!("init");
         self.target.init(req.info())
     }
-    
     fn destroy(&mut self) {
         debug!("destroy");
         self.target.destroy();
@@ -484,6 +484,37 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
                 Ok(written) => reply.written(written),
                 Err(e) => reply.error(e),
             }
+        });
+    }
+
+    fn ioctl(
+        &mut self,
+        req: &fuser::Request<'_>,
+        ino: u64, 
+        fh: u64, 
+        flags: u32, 
+        cmd: u32, 
+        in_data: &[u8], 
+        out_size: u32,
+        reply: fuser::ReplyIoctl
+    ) {
+        let path = get_path!(self, ino, reply);
+        debug!("ioctl: {:?} {:#x} {:#x}", path, flags, cmd);
+        let target = self.target.clone();
+        let req_info = req.info();
+        let data_buf = Vec::from(in_data);
+        self.threadpool_run(move || {
+            target.ioctl(req_info, &path, fh, flags, cmd, &data_buf,
+            |result| {
+                match result {
+                    Ok(data) => reply.ioctl(data.0, 
+                        &data.1[..out_size as usize]),
+                    Err(e) => reply.error(e),
+                }
+                CallbackResult {
+                    _private: std::marker::PhantomData {},
+                }
+            });
         });
     }
 
