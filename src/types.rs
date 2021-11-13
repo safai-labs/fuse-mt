@@ -7,7 +7,8 @@ use std::ffi::{OsStr, OsString};
 use std::path::Path;
 use std::time::{Duration, SystemTime};
 
-
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 /// Info about a request.
 #[derive(Clone, Copy, Debug)]
 #[cfg_attr(feature="serde", derive(Serialize, Deserialize))]
