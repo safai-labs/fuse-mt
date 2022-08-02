@@ -27,7 +27,7 @@ mod types;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-pub use fuser::{FileType, mount2, spawn_mount, MountOption};
+pub use fuser::{FileType, MountOption};
 use std::ffi::OsStr;
 use std::io;
 
