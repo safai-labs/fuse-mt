@@ -38,7 +38,10 @@ fn main() {
     let args: Vec<OsString> = env::args_os().collect();
 
     if args.len() != 3 {
-        println!("usage: {} <target> <mountpoint>", &env::args().next().unwrap());
+        println!(
+            "usage: {} <target> <mountpoint>",
+            &env::args().next().unwrap()
+        );
         std::process::exit(-1);
     }
 
@@ -46,7 +49,15 @@ fn main() {
         target: args[1].clone(),
     };
 
-    let fuse_args = [OsStr::new("-o"), OsStr::new("fsname=passthrufs,auto_unmount")];
+    let fuse_args = [
+        OsStr::new("-o"),
+        OsStr::new("fsname=passthrufs,auto_unmount"),
+    ];
 
-    fuse_mt::mount(fuse_mt::FuseMT::new(filesystem, 1), &args[2], &fuse_args[..]).unwrap();
+    fuse_mt::mount(
+        fuse_mt::FuseMT::new(filesystem, 1),
+        &args[2],
+        &fuse_args[..],
+    )
+    .unwrap();
 }
