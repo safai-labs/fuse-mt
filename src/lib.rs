@@ -19,7 +19,6 @@
 #[macro_use]
 extern crate libc;
 
-
 mod directory_cache;
 mod fusemt;
 mod inode_table;
@@ -34,7 +33,6 @@ use std::io;
 pub use crate::fusemt::*;
 pub use crate::types::*;
 
-
 /// Mounts a filesystem
 // A wrapper around fuser::mount, since fuser::mount is deprecated
 // and we will wrap it ourselves later, we don't want it bleeding out.
@@ -42,7 +40,8 @@ pub use crate::types::*;
 pub fn mount<FS, P>(filesystem: FS, mount_point: P, options: &[&OsStr]) -> io::Result<()>
 where
     FS: fuser::Filesystem,
-    P: AsRef<std::path::Path> {
-		#[allow(deprecated)]
-		fuser::mount(filesystem, mount_point, options)
+    P: AsRef<std::path::Path>,
+{
+    #[allow(deprecated)]
+    fuser::mount(filesystem, mount_point, options)
 }

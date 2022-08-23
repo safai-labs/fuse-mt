@@ -11,7 +11,7 @@ use std::time::{Duration, SystemTime};
 use serde::{Deserialize, Serialize};
 /// Info about a request.
 #[derive(Clone, Copy, Debug)]
-#[cfg_attr(feature="serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct RequestInfo {
     /// The unique ID assigned to this request by FUSE.
     pub unique: u64,
@@ -24,11 +24,12 @@ pub struct RequestInfo {
 }
 
 impl std::fmt::Display for RequestInfo {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) 
-        -> Result<(), std::fmt::Error> 
-    {
-        write!(f, "{{ unique: {}, uid: {}, gid: {}, pid: {} }}",
-            self.unique, self.uid, self.gid, self.pid)
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(
+            f,
+            "{{ unique: {}, uid: {}, gid: {}, pid: {} }}",
+            self.unique, self.uid, self.gid, self.pid
+        )
     }
 }
 
@@ -185,7 +186,14 @@ pub trait FilesystemMT {
     /// * `fh`: a file handle if this is called on an open file.
     /// * `uid`: user ID to change the file's owner to. If `None`, leave the UID unchanged.
     /// * `gid`: group ID to change the file's group to. If `None`, leave the GID unchanged.
-    fn chown(&self, _req: RequestInfo, _path: &Path, _fh: Option<u64>, _uid: Option<u32>, _gid: Option<u32>) -> ResultEmpty {
+    fn chown(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: Option<u64>,
+        _uid: Option<u32>,
+        _gid: Option<u32>,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -193,7 +201,13 @@ pub trait FilesystemMT {
     ///
     /// * `fh`: a file handle if this is called on an open file.
     /// * `size`: size in bytes to set as the file's length.
-    fn truncate(&self, _req: RequestInfo, _path: &Path, _fh: Option<u64>, _size: u64) -> ResultEmpty {
+    fn truncate(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: Option<u64>,
+        _size: u64,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -202,13 +216,29 @@ pub trait FilesystemMT {
     /// * `fh`: a file handle if this is called on an open file.
     /// * `atime`: the time of last access.
     /// * `mtime`: the time of last modification.
-    fn utimens(&self, _req: RequestInfo, _path: &Path, _fh: Option<u64>, _atime: Option<SystemTime>, _mtime: Option<SystemTime>) -> ResultEmpty {
+    fn utimens(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: Option<u64>,
+        _atime: Option<SystemTime>,
+        _mtime: Option<SystemTime>,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
     /// Set timestamps of a filesystem entry (with extra options only used on MacOS).
     #[allow(clippy::too_many_arguments)]
-    fn utimens_macos(&self, _req: RequestInfo, _path: &Path, _fh: Option<u64>, _crtime: Option<SystemTime>, _chgtime: Option<SystemTime>, _bkuptime: Option<SystemTime>, _flags: Option<u32>) -> ResultEmpty {
+    fn utimens_macos(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: Option<u64>,
+        _crtime: Option<SystemTime>,
+        _chgtime: Option<SystemTime>,
+        _bkuptime: Option<SystemTime>,
+        _flags: Option<u32>,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -225,7 +255,14 @@ pub trait FilesystemMT {
     /// * `name`: name of the entry.
     /// * `mode`: mode for the new entry.
     /// * `rdev`: if mode has the bits `S_IFCHR` or `S_IFBLK` set, this is the major and minor numbers for the device file. Otherwise it should be ignored.
-    fn mknod(&self, _req: RequestInfo, _parent: &Path, _name: &OsStr, _mode: u32, _rdev: u32) -> ResultEntry {
+    fn mknod(
+        &self,
+        _req: RequestInfo,
+        _parent: &Path,
+        _name: &OsStr,
+        _mode: u32,
+        _rdev: u32,
+    ) -> ResultEntry {
         Err(libc::ENOSYS)
     }
 
@@ -259,7 +296,13 @@ pub trait FilesystemMT {
     /// * `parent`: path to the directory to make the link in.
     /// * `name`: name of the symbolic link.
     /// * `target`: path (may be relative or absolute) to the target of the link.
-    fn symlink(&self, _req: RequestInfo, _parent: &Path, _name: &OsStr, _target: &Path) -> ResultEntry {
+    fn symlink(
+        &self,
+        _req: RequestInfo,
+        _parent: &Path,
+        _name: &OsStr,
+        _target: &Path,
+    ) -> ResultEntry {
         Err(libc::ENOSYS)
     }
 
@@ -269,7 +312,14 @@ pub trait FilesystemMT {
     /// * `name`: name of the existing entry.
     /// * `newparent`: path to the directory it should be renamed into (may be the same as `parent`).
     /// * `newname`: name of the new entry.
-    fn rename(&self, _req: RequestInfo, _parent: &Path, _name: &OsStr, _newparent: &Path, _newname: &OsStr) -> ResultEmpty {
+    fn rename(
+        &self,
+        _req: RequestInfo,
+        _parent: &Path,
+        _name: &OsStr,
+        _newparent: &Path,
+        _newname: &OsStr,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -278,7 +328,13 @@ pub trait FilesystemMT {
     /// * `path`: path to an existing file.
     /// * `newparent`: path to the directory for the new link.
     /// * `newname`: name for the new link.
-    fn link(&self, _req: RequestInfo, _path: &Path, _newparent: &Path, _newname: &OsStr) -> ResultEntry {
+    fn link(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _newparent: &Path,
+        _newname: &OsStr,
+    ) -> ResultEntry {
         Err(libc::ENOSYS)
     }
 
@@ -308,7 +364,15 @@ pub trait FilesystemMT {
     ///    the result data as a slice, or an error code.
     ///
     /// Return the return value from the `callback` function.
-    fn read(&self, _req: RequestInfo, _path: &Path, _fh: u64, _offset: u64, _size: u32, callback: impl FnOnce(ResultSlice<'_>) -> CallbackResult) -> CallbackResult {
+    fn read(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: u64,
+        _offset: u64,
+        _size: u32,
+        callback: impl FnOnce(ResultSlice<'_>) -> CallbackResult,
+    ) -> CallbackResult {
         callback(Err(libc::ENOSYS))
     }
 
@@ -321,7 +385,15 @@ pub trait FilesystemMT {
     /// * `flags`:
     ///
     /// Return the number of bytes written.
-    fn write(&self, _req: RequestInfo, _path: &Path, _fh: u64, _offset: u64, _data: Vec<u8>, _flags: u32) -> ResultWrite {
+    fn write(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: u64,
+        _offset: u64,
+        _data: Vec<u8>,
+        _flags: u32,
+    ) -> ResultWrite {
         Err(libc::ENOSYS)
     }
 
@@ -351,7 +423,15 @@ pub trait FilesystemMT {
     /// * `lock_owner`: if the filesystem supports locking (`setlk`, `getlk`), remove all locks
     ///   belonging to this lock owner.
     /// * `flush`: whether pending data must be flushed or not.
-    fn release(&self, _req: RequestInfo, _path: &Path, _fh: u64, _flags: u32, _lock_owner: u64, _flush: bool) -> ResultEmpty {
+    fn release(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _fh: u64,
+        _flags: u32,
+        _lock_owner: u64,
+        _flush: bool,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -424,7 +504,15 @@ pub trait FilesystemMT {
     /// * `value`: the data to set the value to.
     /// * `flags`: can be either `XATTR_CREATE` or `XATTR_REPLACE`.
     /// * `position`: offset into the attribute value to write data.
-    fn setxattr(&self, _req: RequestInfo, _path: &Path, _name: &OsStr, _value: &[u8], _flags: u32, _position: u32) -> ResultEmpty {
+    fn setxattr(
+        &self,
+        _req: RequestInfo,
+        _path: &Path,
+        _name: &OsStr,
+        _value: &[u8],
+        _flags: u32,
+        _position: u32,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -481,7 +569,14 @@ pub trait FilesystemMT {
     ///
     /// Return a `CreatedEntry` (which contains the new file's attributes as well as a file handle
     /// -- see documentation on `open` for more info on that).
-    fn create(&self, _req: RequestInfo, _parent: &Path, _name: &OsStr, _mode: u32, _flags: u32) -> ResultCreate {
+    fn create(
+        &self,
+        _req: RequestInfo,
+        _parent: &Path,
+        _name: &OsStr,
+        _mode: u32,
+        _flags: u32,
+    ) -> ResultCreate {
         Err(libc::ENOSYS)
     }
 
@@ -493,8 +588,17 @@ pub trait FilesystemMT {
 
     /// Test for a POSIX file lock.
     #[allow(clippy::too_many_arguments)]
-    fn getlk(&self, _req: &RequestInfo, _path: &Path, _fh: u64,
-        _lock_owner: u64, _start: u64, _end: u64, _typ: i32, _pid: u32) -> ResultEmpty {
+    fn getlk(
+        &self,
+        _req: &RequestInfo,
+        _path: &Path,
+        _fh: u64,
+        _lock_owner: u64,
+        _start: u64,
+        _end: u64,
+        _typ: i32,
+        _pid: u32,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
@@ -506,26 +610,27 @@ pub trait FilesystemMT {
     /// implemented, the kernel will still allow file locking to work locally.
     /// Hence these are only interesting for network filesystems and similar.
     #[allow(clippy::too_many_arguments)]
-    fn setlk(&self,
+    fn setlk(
+        &self,
         _req: RequestInfo,
         _path: &Path,
-        _fh: Option<u64>, _lock_owner: u64,
-        _start: u64, _end: u64,
-        _typ: i32, _pid: u32,
-        _sleep: bool)-> ResultEmpty {
-            Err(libc::ENOSYS)
-        }
+        _fh: Option<u64>,
+        _lock_owner: u64,
+        _start: u64,
+        _end: u64,
+        _typ: i32,
+        _pid: u32,
+        _sleep: bool,
+    ) -> ResultEmpty {
+        Err(libc::ENOSYS)
+    }
 
     /// Map block index within file to block index within device.
     /// Note: This makes sense only for block device backed filesystems mounted
     /// with the 'blkdev' option
-    fn bmap(&self,
-        _req: RequestInfo,
-        _path: &Path,
-        _blocksize: u32,
-        _idx: u64) -> ResultBmap {
-            Err(libc::ENOSYS)
-        }
+    fn bmap(&self, _req: RequestInfo, _path: &Path, _blocksize: u32, _idx: u64) -> ResultBmap {
+        Err(libc::ENOSYS)
+    }
 
     /// control device
     #[allow(clippy::too_many_arguments)]
@@ -533,11 +638,12 @@ pub trait FilesystemMT {
         &self,
         _req: RequestInfo,
         _path: &Path,
-        _fh: u64, _flags: u32,
+        _fh: u64,
+        _flags: u32,
         _cmd: u32,
         _in_data: &[u8],
-        callback: impl FnOnce(ResultIOCTL<'_>) -> 
-            CallbackResult) -> CallbackResult {
+        callback: impl FnOnce(ResultIOCTL<'_>) -> CallbackResult,
+    ) -> CallbackResult {
         callback(Err(libc::ENOSYS))
     }
 
@@ -546,19 +652,16 @@ pub trait FilesystemMT {
         &self,
         _req: RequestInfo,
         _path: &Path,
-        _fh: u64, _offset: i64,
-        _length: i64, _mode: i32) -> ResultEmpty {
+        _fh: u64,
+        _offset: i64,
+        _length: i64,
+        _mode: i32,
+    ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
 
     /// Reposition read/write file offset
-    fn lseek(
-        &self,
-        _req: RequestInfo,
-        _fh: u64,
-        _offset: i64,
-        _whence: i32
-    ) -> ResultLseek {
+    fn lseek(&self, _req: RequestInfo, _fh: u64, _offset: i64, _whence: i32) -> ResultLseek {
         Err(libc::ENOSYS)
     }
 
@@ -578,7 +681,6 @@ pub trait FilesystemMT {
     ) -> ResultWrite {
         Err(libc::ENOSYS)
     }
-
 
     /// macOS only: Rename the volume.
     ///
