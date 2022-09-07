@@ -8,10 +8,15 @@ categories = ["filesystem"]
 keywords = ["fuse", "filesystem"]
 license = "MIT/Apache-2.0"
 readme = "README.md"
-edition = "2018"
+edition = "2021"
 
 [features]
-default = []
+default = [ "max_level_info" ]
+max_level_info 	= [ "tracing/max_level_info" ]
+max_level_debug = [ "tracing/max_level_debug" ]
+max_level_warn 	= [ "tracing/max_level_warn" ]
+max_level_error = [ "tracing/max_level_error" ]
+max_level_off 	= [ "tracing/max_level_off" ]
 
 [dependencies]
 tracing = "0.1"
