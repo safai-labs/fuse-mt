@@ -163,6 +163,14 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
         }
     }
 
+    /// This is called for every file system operation that may change the
+    /// structure of the filesystem (but not contents of files).  The
+    /// request argument contains information about the operation to be
+    /// performed.
+    /// 
+    /// It is a bad idea to return ENOSYS for this operation.  Doing so
+    /// will make the kernel believe that the file system does not
+    /// support all file change operations.
     fn setattr(
         &mut self,
         req: &fuser::Request<'_>,     // passed to all
@@ -217,8 +225,8 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
         }
 
         if atime.is_some() || mtime.is_some() {
-            let atime = atime.map(TimeOrNowExt::time);
-            let mtime = mtime.map(TimeOrNowExt::time);
+            // let atime = atime.map(TimeOrNowExt::time);
+            // let mtime = mtime.map(TimeOrNowExt::time);
             if let Err(e) = self.target.utimens(req.info(), &path, fh, atime, mtime) {
                 reply.error(e);
                 return;

@@ -7,6 +7,7 @@ use std::ffi::{OsStr, OsString};
 use std::path::Path;
 use std::time::{Duration, SystemTime};
 
+use fuser::TimeOrNow;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -35,7 +36,7 @@ impl std::fmt::Display for RequestInfo {
 }
 
 /// A directory entry.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct DirectoryEntry {
     /// Name of the entry
     pub name: OsString,
@@ -222,8 +223,8 @@ pub trait FilesystemMT {
         _req: RequestInfo,
         _path: &Path,
         _fh: Option<u64>,
-        _atime: Option<SystemTime>,
-        _mtime: Option<SystemTime>,
+        _atime: Option<TimeOrNow>,
+        _mtime: Option<TimeOrNow>,
     ) -> ResultEmpty {
         Err(libc::ENOSYS)
     }
