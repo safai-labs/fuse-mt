@@ -28,7 +28,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub use crate::fusemt::*;
 pub use crate::types::*;
-pub use fuser::{FileType, TimeOrNow};
+pub use fuser::{FileType, TimeOrNow, MountOption, BackgroundSession};
 
 // Forward to similarly-named fuser functions to work around deprecation for now.
 // When these are removed, we'll have to either reimplement or break reverse compat.
@@ -62,4 +62,14 @@ pub fn spawn_mount<FS: fuser::Filesystem + Send + 'static, P: AsRef<Path>>(
 ) -> io::Result<fuser::BackgroundSession> {
     #[allow(deprecated)]
     fuser::spawn_mount(fs, mountpoint, options)
+}
+
+#[inline(always)]
+pub fn spawn_mount_new<FS: fuser::Filesystem + Send + 'static, P: AsRef<Path>>(
+    fs: FS,
+    mountpoint: P,
+    options: &[MountOption],
+) -> io::Result<fuser::BackgroundSession> {
+    #[allow(deprecated)]
+    fuser::spawn_mount2(fs, mountpoint, options)
 }
