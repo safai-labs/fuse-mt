@@ -416,30 +416,35 @@ impl FilesystemMT for PassthroughFS {
         _req: RequestInfo,
         path: &Path,
         fh: Option<u64>,
-        atime: Option<SystemTime>,
-        mtime: Option<SystemTime>,
+        atime: Option<TimeOrNow>,
+        mtime: Option<TimeOrNow>,
     ) -> ResultEmpty {
         debug!("utimens: {:?}: {:?}, {:?}", path, atime, mtime);
 
-        let systemtime_to_libc = |time: Option<SystemTime>| -> libc::timespec {
-            if let Some(time) = time {
-                let (secs, nanos) = match time.duration_since(SystemTime::UNIX_EPOCH) {
-                    Ok(duration) => (duration.as_secs() as i64, duration.subsec_nanos()),
-                    Err(in_past) => {
-                        let duration = in_past.duration();
-                        (-(duration.as_secs() as i64), duration.subsec_nanos())
-                    }
-                };
+        let systemtime_to_libc = |time: Option<TimeOrNow>| -> libc::timespec {
+            match time {
+                Some(TimeOrNow::SpecificTime(time)) => {
+                    let (secs, nanos) = match time.duration_since(SystemTime::UNIX_EPOCH) {
+                        Ok(duration) => (duration.as_secs() as i64, duration.subsec_nanos()),
+                        Err(in_past) => {
+                            let duration = in_past.duration();
+                            (-(duration.as_secs() as i64), duration.subsec_nanos())
+                        }
+                    };
 
-                libc::timespec {
-                    tv_sec: secs,
-                    tv_nsec: i64::from(nanos),
+                    libc::timespec {
+                        tv_sec: secs,
+                        tv_nsec: i64::from(nanos),
+                    }
                 }
-            } else {
-                libc::timespec {
+                Some(TimeOrNow::Now) => libc::timespec {
+                    tv_sec: 0,
+                    tv_nsec: libc::UTIME_NOW,
+                },
+                None => libc::timespec {
                     tv_sec: 0,
                     tv_nsec: libc::UTIME_OMIT,
-                }
+                },
             }
         };
 
