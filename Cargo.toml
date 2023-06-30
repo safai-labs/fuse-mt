@@ -11,7 +11,9 @@ readme = "README.md"
 edition = "2021"
 
 [features]
-default = [ "max_level_trace" ]
+
+default = []
+
 max_level_trace = [ "tracing/max_level_trace" ]
 max_level_debug = [ "tracing/max_level_debug" ]
 max_level_info 	= [ "tracing/max_level_info" ]
@@ -27,7 +29,7 @@ serde={ version="1.0", optional=true }
 
 [dependencies.fuser]
 version="0"
-features=[ "abi-7-31", "libfuse", "serde" ]
+features=[ "abi-7-31", "libfuse" ]
 
 [workspace]
 members = [".", "example"]
