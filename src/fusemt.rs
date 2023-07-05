@@ -506,7 +506,10 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
         self.threadpool_run(move || {
             target.ioctl(req_info, &path, fh, flags, cmd, &data_buf, |result| {
                 match result {
-                    Ok(data) => reply.ioctl(data.0, &data.1[..out_size as usize]),
+                    Ok(data) => {
+                        let out_size = data.1.len().min(out_size as usize);
+                        reply.ioctl(out_size as i32, &data.1[..out_size as usize])
+                    },
                     Err(e) => reply.error(e),
                 }
                 CallbackResult {
