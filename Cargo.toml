@@ -36,10 +36,12 @@ serde={ version="1.0", optional=true }
 [dependencies.fuser]
 version="0"
 features=[ "abi-7-31", "libfuse" ]
+path = "../fuser"
+# [workspace]
+# members = [".", "example"]
 
-[workspace]
-members = [".", "example"]
+# [patch.crates-io]
+# fuser = { git = "https://github.com/cberner/fuser" }
 
 [patch.crates-io]
-fuser = { git = "https://github.com/cberner/fuser" }
-
+fuser = { path = "../fuser" }

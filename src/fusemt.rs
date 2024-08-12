@@ -13,7 +13,7 @@ use threadpool::ThreadPool;
 use tracing::{debug, error};
 
 use crate::{directory_cache::*, inode_table::*, types::*};
-use fuser::TimeOrNow;
+use fuser::{KernelConfig, TimeOrNow};
 
 trait IntoRequestInfo {
     fn info(&self) -> RequestInfo;
@@ -51,7 +51,7 @@ fn fuse_fileattr(attr: FileAttr, ino: u64) -> fuser::FileAttr {
     }
 }
 
-trait TimeOrNowExt {
+pub trait TimeOrNowExt {
     fn time(self) -> SystemTime;
 }
 
@@ -109,13 +109,14 @@ macro_rules! get_path {
 }
 
 impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
+
     fn init(
         &mut self,
         req: &fuser::Request<'_>,
-        _config: &mut fuser::KernelConfig, // TODO
+        config: &mut KernelConfig
     ) -> Result<(), libc::c_int> {
         debug!("init");
-        self.target.init(req.info())
+        self.target.init(req.info(), config)
     }
     fn destroy(&mut self) {
         debug!("destroy");
@@ -154,7 +155,7 @@ impl<T: FilesystemMT + Sync + Send + 'static> fuser::Filesystem for FuseMT<T> {
         );
     }
 
-    fn getattr(&mut self, req: &fuser::Request<'_>, ino: u64, reply: fuser::ReplyAttr) {
+    fn getattr(&mut self, req: &fuser::Request<'_>, ino: u64, _fh: Option<u64>, reply: fuser::ReplyAttr) {
         let path = get_path!(self, ino, reply);
         debug!("getattr: {:?}", path);
         match self.target.getattr(req.info(), &path, None) {

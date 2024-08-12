@@ -16,7 +16,7 @@ pub type Inode = u64;
 pub type Generation = u64;
 pub type LookupCount = u64;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct InodeTableEntry {
     path: Option<Arc<PathBuf>>,
     lookups: LookupCount,
@@ -24,7 +24,7 @@ struct InodeTableEntry {
 }
 
 /// A data structure for mapping paths to inodes and vice versa.
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct InodeTable {
     table: Vec<InodeTableEntry>,
     free_list: VecDeque<usize>,

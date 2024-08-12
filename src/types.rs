@@ -8,7 +8,7 @@ use std::path::Path;
 use std::time::{Duration, SystemTime};
 use std::hash::Hash;
 
-use fuser::TimeOrNow;
+use fuser::{KernelConfig, TimeOrNow};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -157,7 +157,7 @@ pub struct CallbackResult {
 /// This trait must be implemented to implement a filesystem with FuseMT.
 pub trait FilesystemMT {
     /// Called on mount, before any other function.
-    fn init(&self, _req: RequestInfo) -> ResultEmpty {
+    fn init(&self, _req: RequestInfo, _config: &mut KernelConfig) -> ResultEmpty {
         Ok(())
     }
 
