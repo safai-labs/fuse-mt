@@ -1,6 +1,6 @@
 [package]
 name = "fuse_mt"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["William R. Fraser <wfraser@codewise.org>"]
 repository = "https://github.com/wfraser/fuse-mt"
 description = "A higher-level FUSE filesystem library with multi-threading and inode->path translation."
@@ -12,30 +12,30 @@ edition = "2021"
 
 [features]
 
-default = []
+default = ["serde"]
 
-max_level_trace = [ "tracing/max_level_trace" ]
-max_level_debug = [ "tracing/max_level_debug" ]
-max_level_info = [ "tracing/max_level_info" ]
-max_level_warn = [ "tracing/max_level_warn" ]
-max_level_error = [ "tracing/max_level_error" ]
-max_level_off = [ "tracing/max_level_off" ]
-release_max_level_trace = [ "tracing/release_max_level_trace" ]
-release_max_level_debug = [ "tracing/release_max_level_debug" ]
-release_max_level_info = [ "tracing/release_max_level_info" ]
-release_max_level_warn = [ "tracing/release_max_level_warn" ]
-release_max_level_error = [ "tracing/release_max_level_error" ]
-release_max_level_off = [ "tracing/release_max_level_off" ]
+max_level_trace = ["tracing/max_level_trace"]
+max_level_debug = ["tracing/max_level_debug"]
+max_level_info = ["tracing/max_level_info"]
+max_level_warn = ["tracing/max_level_warn"]
+max_level_error = ["tracing/max_level_error"]
+max_level_off = ["tracing/max_level_off"]
+release_max_level_trace = ["tracing/release_max_level_trace"]
+release_max_level_debug = ["tracing/release_max_level_debug"]
+release_max_level_info = ["tracing/release_max_level_info"]
+release_max_level_warn = ["tracing/release_max_level_warn"]
+release_max_level_error = ["tracing/release_max_level_error"]
+release_max_level_off = ["tracing/release_max_level_off"]
 
 [dependencies]
 tracing = "0.1"
 libc = "0.2"
 threadpool = "1.8.1"
-serde={ version="1.0", optional=true }
+serde = { version = "1.0", optional = true }
 
 [dependencies.fuser]
-version="0"
-features=[ "abi-7-31", "libfuse" ]
+version = "0"
+features = ["abi-7-31", "libfuse"]
 path = "../fuser"
 # [workspace]
 # members = [".", "example"]
@@ -45,3 +45,4 @@ path = "../fuser"
 
 [patch.crates-io]
 fuser = { path = "../fuser" }
+
