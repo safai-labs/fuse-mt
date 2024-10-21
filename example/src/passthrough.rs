@@ -123,11 +123,6 @@ impl PassthroughFS {
 const TTL: Duration = Duration::from_secs(1);
 
 impl FilesystemMT for PassthroughFS {
-    fn init(&self, _req: RequestInfo) -> ResultEmpty {
-        debug!("init");
-        Ok(())
-    }
-
     fn destroy(&self) {
         debug!("destroy");
     }

@@ -51,7 +51,7 @@ fn main() {
 
     let fuse_args = [
         OsStr::new("-o"),
-        OsStr::new("fsname=passthrufs,auto_unmount"),
+        OsStr::new("fsname=passthrufs,auto_unmount,allow_root,allow_other"),
     ];
 
     fuse_mt::mount(
