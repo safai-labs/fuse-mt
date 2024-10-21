@@ -14,7 +14,7 @@
 // Copyright (c) 2016-2022 by William R. Fraser
 //
 
-#![deny(rust_2018_idioms)]
+// #![deny(rust_2018_idioms)]
 
 #[allow(unused_imports)]
 #[macro_use]
@@ -29,7 +29,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub use crate::fusemt::*;
 pub use crate::types::*;
-pub use fuser::{self, FileType, TimeOrNow, MountOption, BackgroundSession};
+pub use fuser::{self, BackgroundSession, FileType, MountOption, TimeOrNow};
 
 // Forward to similarly-named fuser functions to work around deprecation for now.
 // When these are removed, we'll have to either reimplement or break reverse compat.
