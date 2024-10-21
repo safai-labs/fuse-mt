@@ -4,9 +4,9 @@
 //
 
 use std::ffi::{OsStr, OsString};
+use std::hash::Hash;
 use std::path::Path;
 use std::time::{Duration, SystemTime};
-use std::hash::Hash;
 
 use fuser::{KernelConfig, TimeOrNow};
 #[cfg(feature = "serde")]
@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize};
 /// Info about a request.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+// #[derive(Serialize, Deserialize)]
 pub struct RequestInfo {
     /// The unique ID assigned to this request by FUSE.
     pub unique: u64,
